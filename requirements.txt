@@ -1,0 +1,12 @@
+Flask==3.0.0
+flask-cors>=4.0.0
+Flask-SQLAlchemy>=3.1.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+opencv-python==4.9.0.80
+ultralytics==8.1.0
+numpy==1.26.0
+Pillow==10.2.0
+# PyTorch 2.6+ defaults weights_only=True and breaks YOLO .pt loading; keep <2.6 until upstream aligns.
+torch>=2.2.0,<2.6
+torchvision>=0.17.0,<0.21
