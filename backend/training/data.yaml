@@ -1,0 +1,19 @@
+path: ./dataset
+train: images/train
+val: images/val
+test: images/test
+
+# Waste classification classes
+names:
+  0: plastic_bottle
+  1: metal_can
+  2: paper
+  3: cardboard
+  4: organic_waste
+  5: glass_bottle
+  6: plastic_bag
+  7: aluminum_foil
+  8: newspaper
+  9: food_waste
+
+nc: 10

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result - EcoVision AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 2rem 0;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top center, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: white;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            margin-bottom: 2rem;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .overall-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .layout-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .image-container img {
+            width: 100%;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .detections-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .detection-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-left-width: 4px;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detection-item.wet { border-left-color: var(--accent-green); }
+        .detection-item.dry { border-left-color: var(--accent-blue); }
+        .detection-item.hazardous { border-left-color: var(--accent-red); }
+        .detection-item.unknown { border-left-color: #94a3b8; }
+
+        .detection-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            text-transform: capitalize;
+        }
+
+        .detection-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .confidence-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        .no-detections {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: #fcd34d;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            box-shadow: 0 4px 15px -5px var(--accent-green);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Voice status indicator */
+        .voice-status {
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .voice-icon {
+            display: inline-block;
+            width: 10px; height: 10px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Results</h1>
+        
+        <div class="glass-card">
+            <div class="result-header">
+                <h3 style="margin: 0; color: var(--text-muted); font-weight: 400;">Overall Classification</h3>
+                <div class="overall-badge" id="overall-text">{{ overall }}</div>
+                <div class="voice-status" id="voice-status">
+                    <span class="voice-icon"></span> Playing voice feedback...
+                </div>
+            </div>
+
+            <div class="layout-grid">
+                <div class="image-container">
+                    <img src="{{ image_url }}" alt="Detection Results">
+                </div>
+                
+                <div class="detections-container">
+                    <h3 style="margin-top:0; margin-bottom: 1.5rem;">Detected Objects</h3>
+                    
+                    {% if detections %}
+                        <ul class="detections-list">
+                            {% for detection in detections %}
+                            <li class="detection-item {{ 'wet' if detection.category == 'wet' else 'dry' if detection.category == 'dry' else 'hazardous' if detection.category == 'hazardous' else 'unknown' }}">
+                                <div>
+                                    <div class="detection-name">{{ detection.class_name }}</div>
+                                    <div class="detection-meta">Category: <span style="color: {{ '#10b981' if detection.category == 'wet' else '#3b82f6' if detection.category == 'dry' else '#ef4444' if detection.category == 'hazardous' else '#94a3b8' }}">{{ detection.category }}</span></div>
+                                </div>
+                                <div class="confidence-badge">
+                                    {{ "%.0f"|format(detection.confidence * 100) }}%
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="no-detections">
+                            <h4 style="margin:0 0 0.5rem 0;">No objects detected</h4>
+                            <p style="margin:0; font-size: 0.9rem; opacity: 0.9;">The model couldn't confidently identify any specific waste items in this image. Try uploading a clearer image.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="/legacy/upload" class="btn btn-primary">Upload Another</a>
+            <a href="/legacy/video" class="btn btn-outline">Try Webcam</a>
+            <a href="/legacy/" class="btn btn-outline">Home</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const overallText = document.getElementById('overall-text').innerText;
+            const voiceStatus = document.getElementById('voice-status');
+            
+            if ('speechSynthesis' in window) {
+                // Wait a tiny bit for the UI to render before speaking
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance("Classification result is: " + overallText);
+                    utterance.rate = 0.95;
+                    utterance.pitch = 1.0;
+                    
+                    utterance.onstart = () => {
+                        voiceStatus.style.opacity = '1';
+                    };
+                    
+                    utterance.onend = () => {
+                        voiceStatus.style.opacity = '0';
+                        setTimeout(() => voiceStatus.style.display = 'none', 500);
+                    };
+                    
+                    window.speechSynthesis.speak(utterance);
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
