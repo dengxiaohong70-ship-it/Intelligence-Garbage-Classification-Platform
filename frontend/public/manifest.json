@@ -1,0 +1,15 @@
+{
+  "short_name": "垃圾分类",
+  "name": "垃圾分类识别系统",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+} 

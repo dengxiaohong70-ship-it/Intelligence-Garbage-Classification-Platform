@@ -105,6 +105,7 @@ def llm_explain_detection():
     user_prompt = (
         "以下是生活垃圾图像检测 JSON 结果，请用 3～5 句中文说明："
         "①识别到了什么；②应投入哪类垃圾桶；③一句环保提示。"
+        "请用自然口语化纯文本，不要使用星号、Markdown 或列表符号。"
         f"\n检测摘要：{summary or '无'}"
         f"\n检测明细：{detect_json}"
     )

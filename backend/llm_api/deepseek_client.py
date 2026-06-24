@@ -1,13 +1,30 @@
 import os
+import re
 from typing import Any, Dict, List, Optional
 
 import requests
+
+PLAIN_TEXT_HINT = "请用自然口语化的纯文本回复，不要使用 Markdown、星号加粗、井号标题或代码块。"
 
 DEFAULT_SYSTEM_PROMPT = (
     "你是 EcoVision AI 平台的垃圾分类小助手。"
     "请用简洁、准确的中文回答，重点围绕：可回收物、有害垃圾、厨余垃圾、其他垃圾四类，"
     "以及常见物品的投放建议。不确定时请说明并建议用户以当地规定为准。"
+    f"{PLAIN_TEXT_HINT}"
 )
+
+
+def plainize_llm_reply(text: str) -> str:
+    """去掉常见 Markdown 标记，保证前端显示为普通文本。"""
+    if not text:
+        return text
+    cleaned = text
+    cleaned = re.sub(r"\*\*([^*]+)\*\*", r"\1", cleaned)
+    cleaned = re.sub(r"__([^_]+)__", r"\1", cleaned)
+    cleaned = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"\1", cleaned)
+    cleaned = re.sub(r"^#{1,6}\s+", "", cleaned, flags=re.MULTILINE)
+    cleaned = re.sub(r"`([^`]+)`", r"\1", cleaned)
+    return cleaned.strip()
 
 
 class DeepSeekClient:
@@ -60,4 +77,4 @@ class DeepSeekClient:
         content = (message.get("content") or "").strip()
         if not content:
             raise RuntimeError("DeepSeek 未返回有效文本")
-        return content
+        return plainize_llm_reply(content)
