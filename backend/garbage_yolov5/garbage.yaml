@@ -1,0 +1,13 @@
+# 垃圾分类数据集（wangy + archive 合并，4 类 YOLO 格式）
+# 由 backend/scripts/merge_archive_to_wangy.py 生成/更新
+path: ../../../datasets/wangy
+train: images/train
+val: images/val
+
+nc: 4
+
+names:
+  0: 可回收物
+  1: 有害垃圾
+  2: 厨余垃圾
+  3: 其他垃圾
